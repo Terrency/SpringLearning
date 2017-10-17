@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.springbootlearning.project.dao.UserMapper">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.springbootlearning.project.model.UserModel" id="userMap">
+        <result property="id" column="id"/>
+        <result property="userName" column="user_name"/>
+        <result property="password" column="password"/>
+        <result property="idNumber" column="id_number"/>
+        <result property="phone" column="phone"/>
+        <result property="addressCity" column="address_city"/>
+        <result property="addressArea" column="address_area"/>
+        <result property="addressInfo" column="address_info"/>
+        <result property="isClients" column="is_clients"/>
+        <result property="roleId" column="role_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="modifyTime" column="modify_time"/>
+        <result property="deleteFlag" column="delete_flag"/>
+        <result property="wechatOpenid" column="wechat_openid"/>
+        <result property="wechatName" column="wechat_name"/>
+        <result property="wechatImage" column="wechat_image"/>
+    </resultMap>
+
+	<select id="queryObject" resultMap="userMap">
+		select * from user where id = #{value} and delete_flag = 0
+	</select>
+
+	<select id="queryList" resultMap="userMap">
+		select * from user where delete_flag = 0
+		<if test="userName!=null and userName!=''">
+		and user_name = #{userName}
+		</if>
+		<if test="password!=null and password!=''">
+		and password = #{password}
+		</if>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from user where delete_flag = 0
+	</select>
+	 
+	<insert id="save" parameterType="com.springbootlearning.project.model.UserModel" useGeneratedKeys="true" keyProperty="id">
+		insert into user
+		(
+			`user_name`, 
+			`password`, 
+			`id_number`, 
+			`phone`, 
+			`address_city`, 
+			`address_area`, 
+			`address_info`, 
+			`is_clients`, 
+			`role_id`, 
+			`create_time`, 
+			`modify_time`, 
+			`delete_flag`, 
+			`wechat_openid`, 
+			`wechat_name`, 
+			`wechat_image`
+		)
+		values
+		(
+			#{userName}, 
+			#{password}, 
+			#{idNumber}, 
+			#{phone}, 
+			#{addressCity}, 
+			#{addressArea}, 
+			#{addressInfo}, 
+			#{isClients}, 
+			#{roleId}, 
+			#{createTime}, 
+			#{modifyTime}, 
+			#{deleteFlag}, 
+			#{wechatOpenid}, 
+			#{wechatName}, 
+			#{wechatImage}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.springbootlearning.project.model.UserModel">
+		update user 
+		<set>
+			<if test="userName != null">`user_name` = #{userName}, </if>
+			<if test="password != null">`password` = #{password}, </if>
+			<if test="idNumber != null">`id_number` = #{idNumber}, </if>
+			<if test="phone != null">`phone` = #{phone}, </if>
+			<if test="addressCity != null">`address_city` = #{addressCity}, </if>
+			<if test="addressArea != null">`address_area` = #{addressArea}, </if>
+			<if test="addressInfo != null">`address_info` = #{addressInfo}, </if>
+			<if test="isClients != null">`is_clients` = #{isClients}, </if>
+			<if test="roleId != null">`role_id` = #{roleId}, </if>
+			<if test="createTime != null">`create_time` = #{createTime}, </if>
+			<if test="modifyTime != null">`modify_time` = #{modifyTime}, </if>
+			<if test="deleteFlag != null">`delete_flag` = #{deleteFlag}, </if>
+			<if test="wechatOpenid != null">`wechat_openid` = #{wechatOpenid}, </if>
+			<if test="wechatName != null">`wechat_name` = #{wechatName}, </if>
+			<if test="wechatImage != null">`wechat_image` = #{wechatImage}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+
+    <delete id="delete">
+		update user set delete_flag = 1 where id = #{value}
+	</delete>
+    <delete id="deleteBatch">
+        update user set delete_flag = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+
+</mapper>

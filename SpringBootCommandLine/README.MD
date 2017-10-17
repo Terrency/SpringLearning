@@ -1,0 +1,5 @@
+#上个是启用SpringBoot的默认web项目， 我们也可以使用SpringBoot启动命令行项目，没有连接数据库， 没有使用mybatis,没有开启springboot的debug模式
+[mysql]设置mysql数据库的maven依赖
+[mybatis]设置mybatis的maven依赖,配置文件中设置mapper配置文件所在位置
+[mybatis]利用mybatis generator生成service\dao\model\mapper
+[使用]在application中使用autowrise注入service， 使用service
